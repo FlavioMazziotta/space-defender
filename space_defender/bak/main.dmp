@@ -1,0 +1,314 @@
+00001  0000             *          = $0801
+00002  0801  0B 08 0A              BYTE $0B, $08, $0A, $00, $9E, $32, $30, $36, $34, $00, $00, $00
+00003  080D             
+00004  080D             *          = $0810
+00005  0810             
+00006  0810             
+00007  0810             
+00008  0810             INIZIO
+00009  0810  20 44 E5              JSR $E544   ;PULIZIA SCHERMO
+00010  0813  A9 01                 LDA #1
+00011  0815  8D 20 D0              STA $D020    ;COLORE BORDO
+00012  0818  A9 00                 LDA #0
+00013  081A  8D 21 D0              STA $D021       ;COLORE BACKGROUND
+00014  081D                        
+00015  081D  A9 30                 LDA #48
+00016  081F  8D 00 04              STA $0400
+00017  0822  8D 01 04              STA $0401
+00018  0825  A9 01                 LDA #1
+00019  0827  8D 00 D8              STA $D800
+00020  082A  8D 01 D8              STA $D801
+00021  082D             
+00022  082D  A9 14                 LDA #20
+00023  082F  85 02                 STA $02
+00024  0831  A9 00                 LDA #0
+00025  0833  85 06                 STA $06
+00026  0835  85 09                 STA $09
+00027  0837  85 05                 STA $05
+00028  0839             
+00029  0839  A9 14                 LDA #20
+00030  083B  85 03                 STA $03
+00031  083D  A9 04                 LDA #$04
+00032  083F  85 04                 STA $04
+00033  0841                        
+00034  0841             
+00035  0841             CICLO
+00036  0841  A0 32                 LDY #50
+00037  0843  E6 06                 INC $06
+00038  0845  A2 C8      WAIT1      LDX #200
+00039  0847  CA         WAIT2      DEX
+00040  0848  D0 FD                 BNE WAIT2
+00041  084A  88                    DEY
+00042  084B  D0 F8                 BNE WAIT1
+00043  084D             
+00044  084D             
+00045  084D  A5 09                 LDA $09
+00046  084F  F0 2F                 BEQ BULLET_END
+00047  0851             
+00048  0851  A0 00                 LDY #0
+00049  0853  A9 20                 LDA #32
+00050  0855  91 07                 STA ($07),Y
+00051  0857                        
+00052  0857  38                    SEC
+00053  0858  A5 07                 LDA $07
+00054  085A  E9 28                 SBC #40
+00055  085C  85 07                 STA $07
+00056  085E                        
+00057  085E  A5 08                 LDA $08
+00058  0860  E9 00                 SBC #0
+00059  0862  85 08                 STA $08
+00060  0864             
+00061  0864  A5 08                 LDA $08
+00062  0866  C9 04                 CMP #$04
+00063  0868  B0 07                 BCS CHECK_HIT
+00064  086A             
+00065  086A  A9 00                 LDA #0
+00066  086C  85 09                 STA $09
+00067  086E  4C 80 08              JMP BULLET_END
+00068  0871             
+00069  0871             CHECK_HIT
+00070  0871  A5 07                 LDA $07
+00071  0873  C5 03                 CMP $03
+00072  0875  D0 09                 BNE BULLET_END
+00073  0877  A5 08                 LDA $08
+00074  0879  C5 04                 CMP $04
+00075  087B  D0 03                 BNE BULLET_END
+00076  087D  4C AE 08              JMP KILL
+00077  0880             
+00078  0880             BULLET_END 
+00079  0880  E6 05                 INC $05
+00080  0882  A5 05                 LDA $05
+00081  0884  C9 05                 CMP #5
+00082  0886  D0 23                 BNE CHECK_TUNNEL
+00083  0888                        
+00084  0888  A9 00                 LDA #0
+00085  088A  85 05                 STA $05
+00086  088C                        
+00087  088C  A0 00                 LDY #0
+00088  088E  A9 20                 LDA #32
+00089  0890  91 03                 STA ($03),Y
+00090  0892             
+00091  0892             
+00092  0892  18                    CLC
+00093  0893  A5 03                 LDA $03
+00094  0895  69 28                 ADC #40
+00095  0897  85 03                 STA $03
+00096  0899  A5 04                 LDA $04
+00097  089B  69 00                 ADC #0
+00098  089D  85 04                 STA $04
+00099  089F             
+00100  089F  A5 04                 LDA $04
+00101  08A1  C9 08                 CMP #$08
+00102  08A3  D0 06                 BNE CHECK_TUNNEL
+00103  08A5             
+00104  08A5  20 74 09              JSR RESET_NEM
+00105  08A8  4C F1 08              JMP COLL_GIOCATORE
+00106  08AB             
+00107  08AB             CHECK_TUNNEL 
+00108  08AB  4C DC 08              JMP DISEGNA_NEM
+00109  08AE             
+00110  08AE             KILL
+00111  08AE  A0 00                 LDY #0
+00112  08B0  A9 20                 LDA #32
+00113  08B2  91 07                 STA ($07),Y
+00114  08B4             
+00115  08B4  A9 00                 LDA #0
+00116  08B6  85 09                 STA $09
+00117  08B8                        
+00118  08B8  20 74 09              JSR RESET_NEM
+00119  08BB                        
+00120  08BB  EE 01 04              INC $0401
+00121  08BE  AD 01 04              LDA $0401
+00122  08C1  C9 3A                 CMP #58
+00123  08C3  D0 14                 BNE FINE_SCORE
+00124  08C5                        
+00125  08C5  A9 30                 LDA #48
+00126  08C7  8D 01 04              STA $0401
+00127  08CA  EE 00 04              INC $0400
+00128  08CD  AD 00 04              LDA $0400
+00129  08D0  C9 3A                 CMP #58
+00130  08D2  D0 05                 BNE FINE_SCORE
+00131  08D4             
+00132  08D4  A9 30                 LDA #48
+00133  08D6  8D 00 04              STA $0400
+00134  08D9             
+00135  08D9             FINE_SCORE 
+00136  08D9  4C DC 08              JMP DISEGNA_NEM
+00137  08DC             
+00138  08DC             DISEGNA_NEM 
+00139  08DC  A0 00                 LDY #0
+00140  08DE  A9 5A                 LDA #90
+00141  08E0  91 03                 STA ($03),Y
+00142  08E2                        
+00143  08E2  A5 03                 LDA $03
+00144  08E4  85 FB                 STA $FB
+00145  08E6  18                    CLC
+00146  08E7  A5 04                 LDA $04
+00147  08E9  69 D4                 ADC #$D4
+00148  08EB  85 FC                 STA $FC
+00149  08ED  A9 02                 LDA #2
+00150  08EF  91 FB                 STA ($FB),Y
+00151  08F1             
+00152  08F1             COLL_GIOCATORE 
+00153  08F1  18                    CLC
+00154  08F2  A9 C0                 LDA #$C0
+00155  08F4  65 02                 ADC $02
+00156  08F6  C5 03                 CMP $03
+00157  08F8  D0 09                 BNE INPUT
+00158  08FA  A5 04                 LDA $04
+00159  08FC  C9 07                 CMP #$07
+00160  08FE  D0 03                 BNE INPUT
+00161  0900  4C 8C 09              JMP GAME_OVER
+00162  0903             
+00163  0903             INPUT
+00164  0903  A6 02                 LDX $02
+00165  0905  A9 20                 LDA #32
+00166  0907  9D C0 07              STA $07C0,X
+00167  090A                        
+00168  090A  20 E4 FF              JSR $FFE4
+00169  090D  C9 00                 CMP #0
+00170  090F  F0 3B                 BEQ DISEGNA_GIOC
+00171  0911                        
+00172  0911  C9 57                 CMP #87
+00173  0913  F0 0B                 BEQ SPARA
+00174  0915                        
+00175  0915  C9 41                 CMP #65
+00176  0917  F0 1D                 BEQ SINISTRA
+00177  0919                        
+00178  0919  C9 44                 CMP #68
+00179  091B  F0 24                 BEQ DESTRA
+00180  091D                        
+00181  091D  4C 4C 09              JMP DISEGNA_GIOC
+00182  0920             
+00183  0920             
+00184  0920             SPARA
+00185  0920  A5 09                 LDA $09
+00186  0922  D0 28                 BNE DISEGNA_GIOC
+00187  0924  A9 01                 LDA #1
+00188  0926  85 09                 STA $09
+00189  0928  18                    CLC
+00190  0929  A9 98                 LDA #$98
+00191  092B  65 02                 ADC $02
+00192  092D  85 07                 STA $07
+00193  092F  A9 07                 LDA #$07
+00194  0931  85 08                 STA $08
+00195  0933  4C 4C 09              JMP DISEGNA_GIOC
+00196  0936             
+00197  0936             SINISTRA   
+00198  0936  A6 02                 LDX $02
+00199  0938  E0 02                 CPX #2
+00200  093A  F0 10                 BEQ DISEGNA_GIOC
+00201  093C  C6 02                 DEC $02
+00202  093E  4C 4C 09              JMP DISEGNA_GIOC
+00203  0941             
+00204  0941             DESTRA
+00205  0941  A6 02                 LDX $02
+00206  0943  E0 25                 CPX #37
+00207  0945  F0 05                 BEQ DISEGNA_GIOC
+00208  0947  E6 02                 INC $02
+00209  0949  4C 4C 09              JMP DISEGNA_GIOC
+00210  094C             
+00211  094C             DISEGNA_GIOC 
+00212  094C  A6 02                 LDX $02
+00213  094E  A9 41                 LDA #65
+00214  0950  9D C0 07              STA $07C0,X
+00215  0953  A9 01                 LDA #1
+00216  0955  9D C0 DB              STA $DBC0,X
+00217  0958                        
+00218  0958  A5 09                 LDA $09
+00219  095A  F0 15                 BEQ LOOP_BACK
+00220  095C             
+00221  095C  A0 00                 LDY #0
+00222  095E  A9 66                 LDA #102
+00223  0960  91 07                 STA ($07),Y
+00224  0962                        
+00225  0962  A5 07                 LDA $07
+00226  0964  85 FB                 STA $FB
+00227  0966  18                    CLC
+00228  0967  A5 08                 LDA $08
+00229  0969  69 D4                 ADC #$D4
+00230  096B  85 FC                 STA $FC
+00231  096D  A9 01                 LDA #1
+00232  096F  91 FB                 STA ($FB),Y
+00233  0971                        
+00234  0971             LOOP_BACK
+00235  0971  4C 41 08              JMP CICLO
+00236  0974             
+00237  0974             RESET_NEM
+00238  0974  A9 04                 LDA #$04
+00239  0976  85 04                 STA $04
+00240  0978             NUMERO_RNG 
+00241  0978  A5 06                 LDA $06
+00242  097A  29 3F                 AND #63
+00243  097C  C9 26                 CMP #38
+00244  097E  B0 07                 BCS RIPROVA
+00245  0980  C9 02                 CMP #2
+00246  0982  90 03                 BCC RIPROVA
+00247  0984  85 03                 STA $03
+00248  0986  60                    RTS
+00249  0987             RIPROVA
+00250  0987  E6 06                 INC $06
+00251  0989  4C 78 09              JMP NUMERO_RNG
+00252  098C             
+00253  098C             GAME_OVER
+00254  098C  A2 00                 LDX #0
+00255  098E                        
+00256  098E             SCHERMATA_FINALE 
+00257  098E  BD AE 09              LDA GAMEOVER,X
+00258  0991  9D F0 05              STA $05F0,X
+00259  0994  A9 01                 LDA #1
+00260  0996  9D F0 D9              STA $D9F0,X
+00261  0999  E8                    INX
+00262  099A  E0 09                 CPX #9
+00263  099C  D0 F0                 BNE SCHERMATA_FINALE
+00264  099E             SCHERMATA_ATTESA 
+00265  099E  EE 20 D0              INC $D020
+00266  09A1  20 E4 FF              JSR $FFE4
+00267  09A4  C9 20                 CMP #32
+00268  09A6  F0 03                 BEQ RESTART
+00269  09A8  4C 9E 09              JMP SCHERMATA_ATTESA
+00270  09AB             RESTART    
+00271  09AB  4C 10 08              JMP INIZIO
+00272  09AE             
+00273  09AE             
+00274  09AE             GAMEOVER
+00275  09AE  07 01 0D              BYTE 7, 1, 13, 5, 32, 15, 22, 5, 18
+00276  09B7                        
+00277  09B7             
+00278  09B7                        
+00279  09B7             
+
+******* 25 Label(s) *******
+bullet_end = $0880 
+check_hit = $0871 
+check_tunnel = $08AB 
+ciclo = $0841 
+coll_giocatore = $08F1 
+destra = $0941 
+disegna_gioc = $094C 
+disegna_nem = $08DC 
+fine_score = $08D9 
+game_over = $098C 
+gameover = $09AE 
+inizio = $0810 
+input = $0903 
+kill = $08AE 
+loop_back = $0971 
+numero_rng = $0978 
+reset_nem = $0974 
+restart = $09AB 
+riprova = $0987 
+schermata_attesa = $099E 
+schermata_finale = $098E 
+sinistra = $0936 
+spara = $0920 
+wait1 = $0845 
+wait2 = $0847 
+
+******* 0 Unused label(s) *******
+
+******* 1 Variable(s) *******
+tgt_c64  = $0001
+******* 1 Unused variables(s) *******
+tgt_c64
+
