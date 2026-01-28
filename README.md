@@ -1,4 +1,4 @@
- C64 Space Shooter - Assembly 6502
+ C64 Space Defender - Assembly 6502
 
 Progetto d'esame per il corso di Architettura dei Calcolatori.
 Questo repository contiene il codice sorgente di un videogioco sviluppato interamente in **Assembly MOS 6502** per Commodore 64.
@@ -13,10 +13,10 @@ Caratteristiche Principali
 * Linear Game Loop: Architettura basata su 5 fasi sequenziali (Setup, Timing, Logic, Event Handling, Rendering).
 * RNG Custom: Generatore di numeri pseudo-casuali per lo spawn dei nemici con logica di filtraggio per evitare sovrapposizioni con l'interfaccia utente.
 
-## 🛠️ Requisiti e Replicabilità
+Requisiti e Replicabilità
 Per compilare ed eseguire il progetto è necessario un ambiente di sviluppo per C64.
 
-### Software Necessario
+ Software Necessario
 1.  **Assembler:** (https://www.ajordison.co.uk/download.html).
 2.  **Emulatore:** [VICE Emulator](https://vice-emu.sourceforge.io/) (consigliato).
 
